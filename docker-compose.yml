@@ -3,7 +3,7 @@ version: '2'
 services: 
 
   limesurvey:
-    image: acspri/limesurvey:5.3.22
+    image: acspri/limesurvey:5.3.23
     build: .
     ports:
       - 8082:80
@@ -19,7 +19,7 @@ services:
       - ./config:/var/www/html/application/config
 
   mysql:
-    image: mariadb:10.5
+    image: mariadb
     environment:
       MYSQL_ROOT_PASSWORD: e/xa|m|ple
 
