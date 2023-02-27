@@ -119,7 +119,7 @@ EOPHP
     if [ -n "$LIMESURVEY_USE_DB_SESSIONS" ]; then
         #Add session line
 awk '/DbHttpSession/ && c == 0 { c = 1; system("cat") } { print }' application/config/config.php > application/config/config.tmp <<'EOPHP'
-'session' => array ('class' => 'application.core.web.DbHttpSession', 'connectionID' => 'db', 'sessionTableName' => '{{sessions}}', ),
+'session' => array ('class' => 'application.core.web.DbHttpSession', 'connectionID' => 'db', 'sessionTableName' => '{{sessions}}', 'autoCreateSessionTable' => false, ),
 EOPHP
        mv application/config/config.tmp application/config/config.php
     fi
