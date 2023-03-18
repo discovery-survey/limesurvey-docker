@@ -41,6 +41,8 @@ RUN set -x; \
     mkdir -p /var/lime/application/config; \
     mkdir -p /var/lime/upload; \
     mkdir -p /var/lime/plugins; \
+    mkdir -p /var/lime/sessions; \
+    chown -R www-data:www-data /var/lime/sessions; \
     cp -dpR /var/www/html/application/config/* /var/lime/application/config; \
     cp -dpR /var/www/html/upload/* /var/lime/upload; \
     cp -dpR /var/www/html/plugins/* /var/lime/plugins
@@ -51,13 +53,15 @@ RUN { \
 		echo 'upload_max_filesize=128M'; \
 		echo 'post_max_size=128M'; \
 		echo 'max_execution_time=120'; \
-        echo 'max_input_vars=10000'; \
-        echo 'date.timezone=UTC'; \
-        echo 'session.gc_maxlifetime=86400'; \
-	} > /usr/local/etc/php/conf.d/uploads.ini
+		echo 'max_input_vars=10000'; \
+		echo 'date.timezone=UTC'; \
+		echo 'session.gc_maxlifetime=86400'; \
+		echo 'session.save_path="/var/lime/sessions"'; \
+	} > /usr/local/etc/php/conf.d/limesurvey.ini
 
 VOLUME ["/var/www/html/plugins"]
 VOLUME ["/var/www/html/upload"]
+VOLUME ["/var/lime/sessions"]
 
 #ensure that the config is persisted especially for security.php
 VOLUME ["/var/www/html/application/config"]
