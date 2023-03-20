@@ -141,6 +141,7 @@ EOPHP
     mkdir -p upload/surveys
     chown www-data:www-data -R upload 
     chown www-data:www-data -R application/config
+    chown www-data:www-data -R /var/lime/sessions
 
 	DBSTATUS=$(TERM=dumb php -- "$LIMESURVEY_DB_HOST" "$LIMESURVEY_DB_USER" "$LIMESURVEY_DB_PASSWORD" "$LIMESURVEY_DB_NAME" "$LIMESURVEY_TABLE_PREFIX" "$MYSQL_SSL_CA" <<'EOPHP'
 <?php

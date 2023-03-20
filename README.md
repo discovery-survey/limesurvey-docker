@@ -80,7 +80,7 @@ $ docker run --name some-limesurvey -e LIMESURVEY_DB_HOST=10.1.2.3:3306 \
 
 ## Volumes and Persistence 
 
-Since 5.0.8.1 there are now 3 volumes defined in the Dockerfile:
+Since 5.6.11 there are now 4 volumes defined in the Dockerfile:
 
 1. /var/www/html/plugins
   - Installed LimeSurvey plugins
@@ -88,6 +88,8 @@ Since 5.0.8.1 there are now 3 volumes defined in the Dockerfile:
   - New or created themes, Survey resources, Data from uploaded responses
 3. /var/www/html/application/config
   - Configuration and security.php for encrypted responses
+4. /var/lime/sessions
+  - Sessions if using file based sessions (default)
 
 ## ... via [`docker-compose`](https://github.com/docker/compose)
 
@@ -112,9 +114,10 @@ services:
       - ./plugins:/var/www/html/plugins
       - ./upload:/var/www/html/upload
       - ./config:/var/www/html/application/config
+      - ./sessions:/var/lime/sessions
 
   mysql:
-    image: mariadb
+    image: mariadb:10.5
     environment:
       MYSQL_ROOT_PASSWORD: example
 ```

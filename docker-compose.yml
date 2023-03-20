@@ -18,6 +18,7 @@ services:
       - ./plugins:/var/www/html/plugins
       - ./upload:/var/www/html/upload
       - ./config:/var/www/html/application/config
+      - ./sessions:/var/lime/sessions
 
   mysql:
     image: mariadb:10.5
