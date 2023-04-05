@@ -115,7 +115,6 @@ EOPHP
 
     #Remove session line if exists
     sed -i "/^'session'/d" application/config/config.php
-
     if [ -n "$LIMESURVEY_USE_DB_SESSIONS" ]; then
         #Add session line
 awk '/DbHttpSession/ && c == 0 { c = 1; system("cat") } { print }' application/config/config.php > application/config/config.tmp <<'EOPHP'
@@ -135,12 +134,12 @@ EOPHP
 
     #Set timezone based on environment to config file if not already there
     grep -qF 'date_default_timezone_set' application/config/config.php || sed --in-place '/^}/a\$longName = exec("echo \\$TZ"); if (!empty($longName)) {date_default_timezone_set($longName);}' application/config/config.php
-
     chown www-data:www-data -R tmp 
     chown www-data:www-data -R plugins
     mkdir -p upload/surveys
     chown www-data:www-data -R upload 
     chown www-data:www-data -R application/config
+    mkdir -p /var/lime/sessions
     chown www-data:www-data -R /var/lime/sessions
 
 	DBSTATUS=$(TERM=dumb php -- "$LIMESURVEY_DB_HOST" "$LIMESURVEY_DB_USER" "$LIMESURVEY_DB_PASSWORD" "$LIMESURVEY_DB_NAME" "$LIMESURVEY_TABLE_PREFIX" "$MYSQL_SSL_CA" <<'EOPHP'
@@ -148,17 +147,20 @@ EOPHP
 // database might not exist, so let's try creating it (just to be safe)
 
 error_reporting(E_ERROR | E_PARSE);
+mysqli_report(MYSQLI_REPORT_OFF);
 
 $stderr = fopen('php://stderr', 'w');
-
-list($host, $socket) = explode(':', $argv[1], 2);
+$host = $argv[1];
+$socket = null;
+if (str_contains($host, ':')) {
+    list($host, $socket) = explode(':', $argv[1], 2);
+}
 $port = 0;
 if (is_numeric($socket)) {
-        $port = (int) $socket;
-        $socket = null;
+    $port = (int) $socket;
+    $socket = null;
 }
 
-$maxTries = 10;
 do {
     $con = mysqli_init();
     if (isset($argv[6]) && !empty($argv[6])) {
@@ -166,11 +168,7 @@ do {
     }
     $mysql = mysqli_real_connect($con,$host, $argv[2], $argv[3], '', $port, $socket, MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT);
         if (!$mysql) {
-                fwrite($stderr, "\n" . 'MySQL Connection Error: (' . $mysql->connect_errno . ') ' . $mysql->connect_error . "\n");
-                --$maxTries;
-                if ($maxTries <= 0) {
-                        exit(1);
-                }
+                fwrite($stderr, "MySQL Connection Error will retry in 3 seconds...\n");
                 sleep(3);
         }
 } while (!$mysql);
@@ -181,13 +179,15 @@ if (!$con->query('CREATE DATABASE IF NOT EXISTS `' . $con->real_escape_string($a
         exit(1);
 }
 
-$con->select_db($con->real_escape_string($argv[4]));
+$stat = $con->select_db($con->real_escape_string($argv[4]));
 
-$inst = $con->query("SELECT * FROM `" . $con->real_escape_string($argv[5]) . "users" . "`");
+$inst = $con->query("SHOW TABLES LIKE '" . $con->real_escape_string($argv[5]) . "users'");
+
+$nrows = $inst->num_rows;
 
 $con->close();
 
-if ($inst->num_rows > 0) {
+if ($nrows > 0) {
         exit("DBEXISTS");
 } else {
         exit(0);
@@ -196,8 +196,7 @@ if ($inst->num_rows > 0) {
 EOPHP
 )
 
-
-	if [ "$DBSTATUS" != "DBEXISTS" ] &&  [ -n "$LIMESURVEY_ADMIN_USER" ] && [ -n "$LIMESURVEY_ADMIN_PASSWORD" ]; then
+    if [ "$DBSTATUS" != "DBEXISTS" ] &&  [ -n "$LIMESURVEY_ADMIN_USER" ] && [ -n "$LIMESURVEY_ADMIN_PASSWORD" ]; then
         echo >&2 'Database not yet populated - installing Limesurvey database'
 	    php application/commands/console.php install "$LIMESURVEY_ADMIN_USER" "$LIMESURVEY_ADMIN_PASSWORD" "$LIMESURVEY_ADMIN_NAME" "$LIMESURVEY_ADMIN_EMAIL" verbose
 	fi
