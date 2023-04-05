@@ -1,7 +1,7 @@
-FROM php:8.0-apache
+FROM php:8.1-apache
 
-ENV DOWNLOAD_URL https://download.limesurvey.org/latest-stable-release/limesurvey5.6.14+230403.zip
-ENV DOWNLOAD_SHA256 ce2d8a252e663344a89796c0a1637ba7251fd1faf4fc531e05b68bc987326933
+ENV DOWNLOAD_URL https://download.limesurvey.org/latest-stable-release/limesurvey6.0.0+230405.zip
+ENV DOWNLOAD_SHA256 b4a42b2bd43bffbf4a8d9499a883983dd992136e6e8d868829e623c4df1e829f
 
 # install the PHP extensions we need
 RUN apt-get update && apt-get install -y unzip libc-client-dev libfreetype6-dev libmcrypt-dev libpng-dev libjpeg-dev libldap-common libldap2-dev zlib1g-dev libkrb5-dev libtidy-dev libzip-dev libsodium-dev && rm -rf /var/lib/apt/lists/* \
@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y unzip libc-client-dev libfreetype6-dev 
     && docker-php-ext-configure imap --with-imap-ssl --with-kerberos \
     && docker-php-ext-install imap \
     && docker-php-ext-install sodium \
-    && pecl install mcrypt-1.0.4 \
+    && pecl install mcrypt-1.0.6 \
     && docker-php-ext-enable mcrypt \
     && docker-php-ext-install exif
 
