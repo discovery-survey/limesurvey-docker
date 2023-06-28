@@ -3,7 +3,7 @@ version: '2'
 services: 
 
   limesurvey:
-    image: adamzammit/limesurvey:6.1.4
+    image: adamzammit/limesurvey:6.1.5
     build: .
     ports:
       - 8082:80
