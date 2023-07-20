@@ -76,10 +76,10 @@ awk '/lime_/ && c == 0 { c = 1; system("cat") } { print }' application/config/co
 EOPHP
     fi
 
-	# Install BaltimoreCyberTrustRoot.crt.pem
-	if ! [ -e BaltimoreCyberTrustRoot.crt.pem ]; then
+	# Install BaltimoreCyberTrustRoot.crt.pem if needed
+	if [ "$MYSQL_SSL_CA" == "BaltimoreCyberTrustRoot.crt.pem" ] && ! [ -e BaltimoreCyberTrustRoot.crt.pem ]; then
 		echo "Downloading BaltimoreCyberTrustroot.crt.pem"
-		if curl -o BaltimoreCyberTrustRoot.crt.pem -fsL "https://www.digicert.com/CACerts/BaltimoreCyberTrustRoot.crt.pem"; then
+		if curl -o BaltimoreCyberTrustRoot.crt.pem -fsL "https://cacerts.digicert.com/DigiCertGlobalRootG2.crt.pem"; then
             echo "Downloaded successfully"
         else
             echo "Failed to download certificate - continuing anyway"
