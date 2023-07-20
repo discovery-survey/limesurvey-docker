@@ -139,10 +139,10 @@ EOPHP
 
     #Set timezone based on environment to config file if not already there
     grep -qF 'date_default_timezone_set' application/config/config.php || sed --in-place '/^}/a\$longName = exec("echo \\$TZ"); if (!empty($longName)) {date_default_timezone_set($longName);}' application/config/config.php
-    chown www-data:www-data -R tmp 
+    chown www-data:www-data -R tmp
     chown www-data:www-data -R plugins
     mkdir -p upload/surveys
-    chown www-data:www-data -R upload 
+    chown www-data:www-data -R upload
     chown www-data:www-data -R application/config
     mkdir -p /var/lime/sessions
     chown www-data:www-data -R /var/lime/sessions

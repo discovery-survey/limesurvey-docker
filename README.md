@@ -14,7 +14,7 @@ $ docker cp some-limesurvey:/var/www/html/application/config/security.php /tmp/s
 Then update to 5.0.8.1 or greater. You can then copy the security.php file back:
 
 ```console
-$ docker cp /tmp/security.php some-limesurvey:/var/www/html/application/config/security.php 
+$ docker cp /tmp/security.php some-limesurvey:/var/www/html/application/config/security.php
 ```
 
 5.0.8.1 or greater will persist the config directory.
@@ -32,7 +32,7 @@ Volumes are specified for plugins and upload directories for persistence.
 
 # Tags
 
--    latest - Tracks LimeSurvey latest stable release 
+-    latest - Tracks LimeSurvey latest stable release
 -    lts - Tracks LimeSurvey LTS release
 
 Tags corresponding to version on https://community.limesurvey.org/downloads/
@@ -79,7 +79,7 @@ $ docker run --name some-limesurvey -e LIMESURVEY_DB_HOST=10.1.2.3:3306 \
     -e LIMESURVEY_DB_USER=... -e LIMESURVEY_DB_PASSWORD=... -d adamzammit/limesurvey
 ```
 
-## Volumes and Persistence 
+## Volumes and Persistence
 
 Since 5.6.11 there are now 4 volumes defined in the Dockerfile:
 
