@@ -4,9 +4,8 @@ services:
 
   limesurvey:
     image: adamzammit/limesurvey:6.2.4
-    build: .
     ports:
-      - 8082:80
+      - 127.0.0.1:8082:80
     environment:
       LIMESURVEY_DB_PASSWORD: e/xa|m|ple
       LIMESURVEY_ADMIN_USER: admin
