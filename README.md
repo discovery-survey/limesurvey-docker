@@ -54,7 +54,12 @@ The following environment variables are also honored for configuring your Limesu
 -	`-e LIMESURVEY_ADMIN_PASSWORD=...` (defaults to "" - the password of the Limesurvey administrator)
 -	`-e LIMESURVEY_ADMIN_NAME=...` (defaults to "Lime Administrator" - The full name of the Limesurvey administrator)
 -	`-e LIMESURVEY_ADMIN_EMAIL=...` (defaults to "lime@lime.lime" - The email address of the Limesurvey administrator)
+-	`-e LIMESURVEY_SMTP_HOST=...` (defaults to "" - set the SMTP host - you can also specify a different port than 25 by using this format: [hostname:port], e.g. "smtp.example.com:587")
+-	`-e LIMESURVEY_SMTP_USER=...` (defaults to "" - only set this if your server requires authorization - if you set it you HAVE to set a password too)
+-	`-e LIMESURVEY_SMTP_PASSWORD=...` (defaults to "" - SMTP authorization password - empty password is not allowed)
+-	`-e LIMESURVEY_SMTP_SSL=...` (defaults to "" - set this to "ssl" to use SSL/TLS or "tls" to use StartTLS for SMTP connection)
 -	`-e LIMESURVEY_DEBUG=...` (defaults to 0 - Debug level of Limesurvey, 0 is off, 1 for errors, 2 for strict PHP and to be able to edit standard templates)
+-	`-e LIMESURVEY_SMTP_DEBUG=...` (defaults to "" - set this to any value to enable SMTP debug mode)
 -	`-e LIMESURVEY_SQL_DEBUG=...` (defaults to 0 - Debug level of Limesurvey for SQL, 0 is off, 1 is on - note requires LIMESURVEY_DEBUG set to 2)
 -	`-e LIMESURVEY_USE_INNODB=...` (defaults to '' - Leave blank or don't set to use standard MyISAM database. Set to any value to use InnoDB (required for some cloud providers))
 -	`-e LIMESURVEY_USE_DB_SESSIONS=...` (defaults to '' - Leave blank or don't set to use file based sessions. Set to any value to use DB based sessions

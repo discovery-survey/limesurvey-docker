@@ -32,7 +32,12 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
     file_env 'LIMESURVEY_ADMIN_EMAIL' 'lime@lime.lime'
     file_env 'LIMESURVEY_ADMIN_USER' ''
     file_env 'LIMESURVEY_ADMIN_PASSWORD' ''
+    file_env 'LIMESURVEY_SMTP_HOST' ''
+    file_env 'LIMESURVEY_SMTP_USER' ''
+    file_env 'LIMESURVEY_SMTP_PASSWORD' ''
+    file_env 'LIMESURVEY_SMTP_SSL' ''
     file_env 'LIMESURVEY_DEBUG' '0'
+    file_env 'LIMESURVEY_SMTP_DEBUG' ''
     file_env 'LIMESURVEY_SQL_DEBUG' '0'
     file_env 'MYSQL_SSL_CA' ''
     file_env 'LIMESURVEY_USE_INNODB' ''
@@ -76,6 +81,8 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 awk '/lime_/ && c == 0 { c = 1; system("cat") } { print }' application/config/config-sample-mysql.php > application/config/config.php <<'EOPHP'
 'attributes' => array(),
 EOPHP
+        # Add default email config, so it can be overriden later
+        sed -i "/'config'=>array/s/$/\n'siteadminemail' => 'your-email@example.net',\n'siteadminname' => 'Your Name',\n'emailmethod' => 'mail',\n'emailsmtphost' => 'localhost',\n'emailsmtpuser' => '',\n'emailsmtppassword' => '',\n'emailsmtpssl' => '',\n'emailsmtpdebug' => '',/" application/config/config.php
     fi
 
     # Install BaltimoreCyberTrustRoot.crt.pem if needed
@@ -139,6 +146,24 @@ EOPHP
         sed -i "/\/\/ Update default LimeSurvey config here/s//'mysqlEngine'=>'InnoDB',/" application/config/config.php
         DBENGINE='InnoDB'
         chmod ug-w application/core/db/MysqlSchema.php
+    fi
+
+    #Set SMTP settings if environment contains values for it
+    if [ -n "$LIMESURVEY_SMTP_HOST" ]; then
+        set_config 'emailmethod' "'smtp'"
+        set_config 'emailsmtphost' "'$LIMESURVEY_SMTP_HOST'"
+        set_config 'siteadminemail' "'$LIMESURVEY_ADMIN_EMAIL'"
+        set_config 'siteadminname' "'$LIMESURVEY_ADMIN_NAME'"
+        if [ -n "$LIMESURVEY_SMTP_USER" ] && [ -n "$LIMESURVEY_SMTP_PASSWORD" ]; then
+            set_config 'emailsmtpuser' "'$LIMESURVEY_SMTP_USER'"
+            set_config 'emailsmtppassword' "'$LIMESURVEY_SMTP_PASSWORD'"
+        fi
+        if [ -n "$LIMESURVEY_SMTP_SSL" ]; then
+            set_config 'emailsmtpssl' "'$LIMESURVEY_SMTP_SSL'"
+        fi
+        if [ -n "$LIMESURVEY_SMTP_DEBUG" ]; then
+            set_config 'emailsmtpdebug' "1"
+        fi
     fi
 
     #Set timezone based on environment to config file if not already there
