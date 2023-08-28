@@ -149,14 +149,14 @@ EOPHP
     fi
 
     #Set SMTP settings if environment contains values for it
-    set_config 'emailmethod' "mail"
-    set_config 'emailsmtphost' "localhost"
-    set_config 'siteadminemail' "your-email@example.net"
-    set_config 'siteadminname' "Your Name"
-    set_config 'emailsmtpuser' ""
-    set_config 'emailsmtppassword' ""
-    set_config 'emailsmtpssl' ""
-    set_config 'emailsmtpdebug' ""
+    set_config 'emailmethod' "'mail'"
+    set_config 'emailsmtphost' "'localhost'"
+    set_config 'siteadminemail' "'your-email@example.net'"
+    set_config 'siteadminname' "'Your Name'"
+    set_config 'emailsmtpuser' "''"
+    set_config 'emailsmtppassword' "''"
+    set_config 'emailsmtpssl' "''"
+    set_config 'emailsmtpdebug' "''"
     if [ -n "$LIMESURVEY_SMTP_HOST" ]; then
         set_config 'emailmethod' "'smtp'"
         set_config 'emailsmtphost' "'$LIMESURVEY_SMTP_HOST'"
