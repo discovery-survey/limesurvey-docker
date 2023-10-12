@@ -28,7 +28,7 @@ docker build . -t adamzammit/limesurvey:$VERSION
 
 docker-compose down
 
-rm -rf sessions upload plugins config
+rm -rf sessions upload plugins config mysql
 
 docker-compose up -d
 
