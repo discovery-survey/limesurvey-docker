@@ -54,6 +54,7 @@ The following environment variables are also honored for configuring your Limesu
 -	`-e LIMESURVEY_ADMIN_PASSWORD=...` (defaults to "" - the password of the Limesurvey administrator)
 -	`-e LIMESURVEY_ADMIN_NAME=...` (defaults to "Lime Administrator" - The full name of the Limesurvey administrator)
 -	`-e LIMESURVEY_ADMIN_EMAIL=...` (defaults to "lime@lime.lime" - The email address of the Limesurvey administrator)
+-	`-e LIMESURVEY_FROM_EMAIL=...` (defaults to "your-email@example.net" - The email address where messages will be sent from)
 -	`-e LIMESURVEY_SMTP_HOST=...` (defaults to "" - set the SMTP host - you can also specify a different port than 25 by using this format: [hostname:port], e.g. "smtp.example.com:587")
 -	`-e LIMESURVEY_SMTP_USER=...` (defaults to "" - only set this if your server requires authorization - if you set it you HAVE to set a password too)
 -	`-e LIMESURVEY_SMTP_PASSWORD=...` (defaults to "" - SMTP authorization password - empty password is not allowed)

@@ -82,7 +82,7 @@ awk '/lime_/ && c == 0 { c = 1; system("cat") } { print }' application/config/co
 'attributes' => array(),
 EOPHP
         # Add default email config, so it can be overriden later
-        sed -i "/'config'=>array/s/$/\n'siteadminemail' => 'your-email@example.net',\n'siteadminname' => 'Your Name',\n'emailmethod' => 'mail',\n'emailsmtphost' => 'localhost',\n'emailsmtpuser' => '',\n'emailsmtppassword' => '',\n'emailsmtpssl' => '',\n'emailsmtpdebug' => '',/" application/config/config.php
+        sed -i "/'config'=>array/s/$/\n'siteadminemail' => 'your-email@example.net',\n'siteadminbounce' => 'your-email@example.net',\n'siteadminname' => 'Your Name',\n'emailmethod' => 'mail',\n'emailsmtphost' => 'localhost',\n'emailsmtpuser' => '',\n'emailsmtppassword' => '',\n'emailsmtpssl' => '',\n'emailsmtpdebug' => '',/" application/config/config.php
     fi
 
     # Install BaltimoreCyberTrustRoot.crt.pem if needed
@@ -152,6 +152,7 @@ EOPHP
     set_config 'emailmethod' "'mail'"
     set_config 'emailsmtphost' "'localhost'"
     set_config 'siteadminemail' "'your-email@example.net'"
+    set_config 'siteadminbounce' "'your-email@example.net'"
     set_config 'siteadminname' "'Your Name'"
     set_config 'emailsmtpuser' "''"
     set_config 'emailsmtppassword' "''"
@@ -161,6 +162,7 @@ EOPHP
         set_config 'emailmethod' "'smtp'"
         set_config 'emailsmtphost' "'$LIMESURVEY_SMTP_HOST'"
         set_config 'siteadminemail' "'$LIMESURVEY_ADMIN_EMAIL'"
+        set_config 'siteadminbounce' "'$LIMESURVEY_FROM_EMAIL'"
         set_config 'siteadminname' "'$LIMESURVEY_ADMIN_NAME'"
         if [ -n "$LIMESURVEY_SMTP_USER" ] && [ -n "$LIMESURVEY_SMTP_PASSWORD" ]; then
             set_config 'emailsmtpuser' "'$LIMESURVEY_SMTP_USER'"
