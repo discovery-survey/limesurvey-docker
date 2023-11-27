@@ -1,7 +1,7 @@
 FROM php:8.1-apache
 
-ENV DOWNLOAD_URL https://download.limesurvey.org/latest-master/limesurvey6.3.6+231120.zip
-ENV DOWNLOAD_SHA256 8f689783eca9b68bbdf2f6e4c88f64a2cf4ccd5905c89e4cd15af707d816dcf5
+ENV DOWNLOAD_URL https://download.limesurvey.org/latest-master/limesurvey6.3.7+231127.zip
+ENV DOWNLOAD_SHA256 b8692b84bc0654a0eb4febca1c33c383289d27a16243d0c4f494682aff8eb74c
 
 # install the PHP extensions we need
 RUN apt-get update && apt-get install -y unzip libc-client-dev libfreetype6-dev libmcrypt-dev libpng-dev libjpeg-dev libldap-common libldap2-dev zlib1g-dev libkrb5-dev libtidy-dev libzip-dev libsodium-dev && rm -rf /var/lib/apt/lists/* \
