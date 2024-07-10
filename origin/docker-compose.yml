@@ -3,9 +3,7 @@ version: '2'
 services: 
 
   limesurvey:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: adamzammit/limesurvey:6.4.5
     ports:
       - 127.0.0.1:8082:80
     environment:
@@ -27,5 +25,4 @@ services:
       MYSQL_ROOT_PASSWORD: e/xa|m|ple
     volumes:
        - ./mysql:/var/lib/mysql
-    ports:
-       - 23306:3306
+
