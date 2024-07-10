@@ -82,7 +82,7 @@ awk '/lime_/ && c == 0 { c = 1; system("cat") } { print }' application/config/co
 'attributes' => array(),
 EOPHP
         # Add default email config, so it can be overriden later
-        sed -i "/'config'=>array/s/$/\n'siteadminemail' => 'your-email@example.net',\n'siteadminbounce' => 'your-email@example.net',\n'siteadminname' => 'Your Name',\n'emailmethod' => 'mail',\n'emailsmtphost' => 'localhost',\n'emailsmtpuser' => '',\n'emailsmtppassword' => '',\n'emailsmtpssl' => '',\n'emailsmtpdebug' => '',/" application/config/config.php
+        sed -i "/'config'=>array/s/$/\n'siteadminemail' => 'your-email@example.net',\n'siteadminbounce' => 'your-email@example.net',\n'siteadminname' => 'Your Name',\n'emailmethod' => 'mail',\n'emailsmtphost' => 'localhost',\n'emailsmtpuser' => '',\n'emailsmtppassword' => '',\n'emailsmtpssl' => '',\n'emailsmtpdebug' => '',\n'timeOutTime' => 60,\n'maxLoginAttemptParticipants' => 10,\n'timeOutParticipants' => 60  /" application/config/config.php
     fi
 
     # Install BaltimoreCyberTrustRoot.crt.pem if needed
@@ -158,6 +158,9 @@ EOPHP
     set_config 'emailsmtppassword' "''"
     set_config 'emailsmtpssl' "''"
     set_config 'emailsmtpdebug' "''"
+    set_config 'timeOutTime' "60"
+    set_config 'maxLoginAttemptParticipants' "10"
+    set_config 'timeOutParticipants' "60"
     
     if [ -n "$LIMESURVEY_SMTP_HOST" ]; then
         set_config 'emailmethod' "'smtp'"
