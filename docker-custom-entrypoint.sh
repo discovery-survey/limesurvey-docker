@@ -197,6 +197,10 @@ EOPHP
         set_config 'emailsmtppassword' "''"
         set_config 'emailsmtpssl' "''"
         set_config 'emailsmtpdebug' "''"
+        set_config 'timeOutTime' "60"
+        set_config 'maxLoginAttemptParticipants' "10"
+        set_config 'timeOutParticipants' "60"
+
         if [ -n "$LIMESURVEY_SMTP_HOST" ]; then
             set_config 'emailmethod' "'smtp'"
             set_config 'emailsmtphost' "'$LIMESURVEY_SMTP_HOST'"
