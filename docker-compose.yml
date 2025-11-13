@@ -9,6 +9,7 @@ services:
     ports:
       - 127.0.0.1:8082:80
     environment:
+      LIMESURVEY_DONT_UPDATE: 'true'
       LIMESURVEY_DB_PASSWORD: e/xa|m|ple
       LIMESURVEY_ADMIN_USER: admin
       LIMESURVEY_ADMIN_PASSWORD: password

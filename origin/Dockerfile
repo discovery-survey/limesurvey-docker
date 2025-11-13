@@ -1,22 +1,29 @@
-FROM php:8.1-apache
+FROM php:8.3-apache
 
-ENV DOWNLOAD_URL https://download.limesurvey.org/latest-master/limesurvey6.4.5+240205.zip
-ENV DOWNLOAD_SHA256 385f066e2cbab2e5ca0b7b38a4248fb05700f212a1bc06dcc7234da2be9ad84f
+ENV DOWNLOAD_URL=https://download.limesurvey.org/latest-master/limesurvey6.15.23+251110.zip
+ENV DOWNLOAD_SHA256=319a22bf987df07d1554b9a20cd8d16fd6c3f70c81430e07ba118d5639e019f1
+
+#Need sury repo for libc-client-dev
+RUN curl -sSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb \
+    && dpkg -i /tmp/debsuryorg-archive-keyring.deb \
+    && echo "deb [signed-by=/usr/share/keyrings/debsuryorg-archive-keyring.gpg] https://packages.sury.org/php/ trixie main" > /etc/apt/sources.list.d/php.list
 
 # install the PHP extensions we need
-RUN apt-get update && apt-get install -y unzip libc-client-dev libfreetype6-dev libmcrypt-dev libpng-dev libjpeg-dev libldap-common libldap2-dev zlib1g-dev libkrb5-dev libtidy-dev libzip-dev libsodium-dev && rm -rf /var/lib/apt/lists/* \
+RUN apt-get update && apt-get install -y unzip libc-client-dev libfreetype6-dev libmcrypt-dev libpng-dev libjpeg-dev libldap-common libldap2-dev zlib1g-dev libkrb5-dev libtidy-dev libzip-dev libsodium-dev libpq-dev libonig-dev netcat-openbsd && rm -rf /var/lib/apt/lists/* \
     && docker-php-ext-configure gd --with-freetype=/usr/include/  --with-jpeg=/usr \
-    && docker-php-ext-install gd mysqli pdo pdo_mysql opcache zip iconv tidy \
+    && docker-php-ext-install gd mysqli mbstring pdo pdo_mysql pdo_pgsql opcache zip iconv tidy sodium \
     && docker-php-ext-configure ldap --with-libdir=lib/$(gcc -dumpmachine)/ \
     && docker-php-ext-install ldap \
     && docker-php-ext-configure imap --with-imap-ssl --with-kerberos \
     && docker-php-ext-install imap \
-    && docker-php-ext-install sodium \
-    && pecl install mcrypt-1.0.6 \
+    && pecl install mcrypt-1.0.7 \
+    && pecl install redis-6.1.0 \
     && docker-php-ext-enable mcrypt \
-    && docker-php-ext-install exif
+    && docker-php-ext-enable redis
 
 RUN a2enmod rewrite
+
+RUN a2enmod remoteip
 
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
@@ -42,13 +49,18 @@ RUN set -x; \
     mkdir -p /var/lime/application/config; \
     mkdir -p /var/lime/upload; \
     mkdir -p /var/lime/plugins; \
+    mkdir -p /var/lime/tmp; \
     mkdir -p /var/lime/sessions; \
     chown -R www-data:www-data /var/lime/sessions; \
     cp -dpR /var/www/html/application/config/* /var/lime/application/config; \
     cp -dpR /var/www/html/upload/* /var/lime/upload; \
     cp -dpR /var/www/html/plugins/* /var/lime/plugins; \
+    cp -dpR /var/www/html/tmp/* /var/lime/tmp; \
     chown -R www-data:www-data /var/lime/application; \
     chown -R www-data:www-data /var/lime/plugins; \
+    chown -R www-data:www-data /var/lime/tmp; \
+    chmod -R ug+rwx /var/lime/tmp;\
+    chmod -R ug+rwx /var/www/html/tmp;\
     chown -R www-data:www-data /var/lime/upload
 
 #Set PHP defaults for Limesurvey (allow bigger uploads)
@@ -62,6 +74,13 @@ RUN { \
         echo 'session.gc_maxlifetime=86400'; \
         echo 'session.save_path="/var/lime/sessions"'; \
     } > /usr/local/etc/php/conf.d/limesurvey.ini
+
+
+#Accept remote ip from local proxies where X-Forwarded-For set
+RUN { \
+        echo 'RemoteIPHeader X-Forwarded-For'; \
+        echo 'RemoteIPInternalProxy 10.0.0.0/8 127.0.0.1'; \
+    } > /etc/apache2/conf-enabled/remoteip.conf
 
 VOLUME ["/var/www/html/plugins"]
 VOLUME ["/var/www/html/upload"]
