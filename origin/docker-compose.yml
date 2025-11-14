@@ -1,9 +1,7 @@
-version: '2'
-
-services: 
+services:
 
   limesurvey:
-    image: adamzammit/limesurvey:6.4.5
+    image: adamzammit/limesurvey:6.15.23
     ports:
       - 127.0.0.1:8082:80
     environment:
@@ -24,5 +22,4 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: e/xa|m|ple
     volumes:
-       - ./mysql:/var/lib/mysql
-
+      - ./mysql:/var/lib/mysql

@@ -45,7 +45,9 @@ $ docker run --name some-limesurvey --link some-mysql:mysql -d adamzammit/limesu
 
 The following environment variables are also honored for configuring your Limesurvey instance. If Limesurvey is already installed, these environment variables will update the Limesurvey config file.
 
+-	`-e LIMESURVEY_DB_TYPE=...` (defaults to 'mysql', change to 'pgsql' as needed)
 -	`-e LIMESURVEY_DB_HOST=...` (defaults to the IP and port of the linked `mysql` container)
+-	`-e LIMESURVEY_DB_PORT=...` (defaults to 3306, _must_ change to e.g. 5432 if a Postgres database is used)
 -	`-e LIMESURVEY_DB_USER=...` (defaults to "root")
 -	`-e LIMESURVEY_DB_PASSWORD=...` (defaults to the value of the `MYSQL_ROOT_PASSWORD` environment variable from the linked `mysql` container)
 -	`-e LIMESURVEY_DB_NAME=...` (defaults to "limesurvey")
@@ -64,8 +66,12 @@ The following environment variables are also honored for configuring your Limesu
 -	`-e LIMESURVEY_SQL_DEBUG=...` (defaults to 0 - Debug level of Limesurvey for SQL, 0 is off, 1 is on - note requires LIMESURVEY_DEBUG set to 2)
 -	`-e LIMESURVEY_USE_INNODB=...` (defaults to '' - Leave blank or don't set to use standard MyISAM database. Set to any value to use InnoDB (required for some cloud providers))
 -	`-e LIMESURVEY_USE_DB_SESSIONS=...` (defaults to '' - Leave blank or don't set to use file based sessions. Set to any value to use DB based sessions
+-	`-e LIMESURVEY_PHP_SESSION_SAVE_HANDLER=...` (defaults to '' - Leave blank or don't set to use default sessions. Set to the desired handler (eg redis, memcached) if you want to specify. Must use in conjuction with LIMESURVEY_PHP_SESSION_SAVE_PATH
+-	`-e LIMESURVEY_PHP_SESSION_SAVE_PATH=...` (defaults to '' - Leave blank or don't set to use default sessions. Set to the desired session path if you want to specify. Must use in conjuction with LIMESURVEY_PHP_SESSION_SAVE_HANDLER
 -	`-e LIMESURVEY_DONT_SHOW_SCRIPT_NAME=...` (defaults to '' - Leave blank or don't set to show the script name `index.php` in URLs. Set to any value to omit the script name)
--	`-e MYSQL_SSL_CA=...` (path to an SSL CA for MySQL based in the root directory (/var/www/html). If changing paths, escape your forward slashes. Do not set or leave blank for a non SSL connection). If set to "BaltimoreCyberTrustRoot.crt.pem", the certificate is downloaded before the application is started (see [https://learn.microsoft.com/en-us/azure/mysql/single-server/how-to-configure-ssl#step-1-obtain-ssl-certificate](https://learn.microsoft.com/en-us/azure/mysql/single-server/how-to-configure-ssl#step-1-obtain-ssl-certificate)) - SECURITY NOTE: By default this image sets PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT to "false" for compatability reasons
+-	`-e LIMESURVEY_DONT_UPDATE=...` (defaults to '' - Leave blank or don't set for normal startup, set to any value to avoid updating password, config settings, and clearning cache)
+-   `-e LIMESURVEY_API_MODE=..."` (defaults to 'off' - Set to one of 'off', 'json' or 'xml' to turn on the RPC-API)
+-	`-e MYSQL_SSL_CA=...` (path to an SSL CA for MySQL based in the root directory (/var/www/html). If changing paths, escape your forward slashes. Do not set or leave blank for a non SSL connection). If set to "BaltimoreCyberTrustRoot.crt.pem", the certificate is downloaded before the application is started (see [https://learn.microsoft.com/en-us/azure/mysql/single-server/how-to-configure-ssl#step-1-obtain-ssl-certificate](https://learn.microsoft.com/en-us/azure/mysql/single-server/how-to-configure-ssl#step-1-obtain-ssl-certificate)). If set to "global-bundle.pem" - will download Amazon certificate from: https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem - SECURITY NOTE: By default this image sets PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT to "false" for compatability reasons
 -	`-e TZ=...` Time zone name. If set, will configure PHP and LimeSurvey to use this time zone
 
 If the `LIMESURVEY_DB_NAME` specified does not already exist on the given MySQL server, it will be created automatically upon startup of the `limesurvey` container, provided that the `LIMESURVEY_DB_USER` specified has the necessary permissions to create it.
@@ -90,13 +96,13 @@ $ docker run --name some-limesurvey -e LIMESURVEY_DB_HOST=10.1.2.3:3306 \
 Since 5.6.11 there are now 4 volumes defined in the Dockerfile:
 
 1. /var/www/html/plugins
-  - Installed LimeSurvey plugins
+- Installed LimeSurvey plugins
 2. /var/www/html/upload
-  - New or created themes, Survey resources, Data from uploaded responses
+- New or created themes, Survey resources, Data from uploaded responses
 3. /var/www/html/application/config
-  - Configuration and security.php for encrypted responses
+- Configuration and security.php for encrypted responses
 4. /var/lime/sessions
-  - Sessions if using file based sessions (default)
+- Sessions if using file based sessions (default)
 
 ## ... via [`docker-compose`](https://github.com/docker/compose)
 
@@ -143,4 +149,3 @@ Notes
 -----
 
 This Dockerfile is based on the Dockerfile from the [Wordpress official docker image](https://github.com/docker-library/wordpress/tree/8ab70dd61a996d58c0addf4867a768efe649bf65/php5.6/apache)
-
