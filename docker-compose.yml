@@ -3,16 +3,16 @@ version: '2'
 services: 
 
   limesurvey:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: adamzammit/limesurvey:6.15.23
     ports:
       - 127.0.0.1:8082:80
     environment:
       LIMESURVEY_DONT_UPDATE: 'true'
       LIMESURVEY_DB_PASSWORD: e/xa|m|ple
-      LIMESURVEY_ADMIN_USER: admin
-      LIMESURVEY_ADMIN_PASSWORD: password
+      # Uncomment LIMESURVEY_ADMIN_{USER,PASSWORD} for initial deploy
+      # otherwise admin password will be reset
+      # LIMESURVEY_ADMIN_USER: admin
+      # LIMESURVEY_ADMIN_PASSWORD: password
       LIMESURVEY_ADMIN_NAME: Lime Administrator
       LIMESURVEY_ADMIN_EMAIL: lime@lime.lime
       TZ: Europe/London
@@ -26,7 +26,20 @@ services:
     image: mariadb:10.5
     environment:
       MYSQL_ROOT_PASSWORD: e/xa|m|ple
+      LD_PRELOAD: "/usr/lib/x86_64-linux-gnu/libjemalloc.so.2"
+    command: >
+      --innodb_buffer_pool_size=768M
+      --key_buffer_size=8M
+      --innodb_log_buffer_size=16M
+      --max_connections=50
+      --table_open_cache=4000
+      --table_definition_cache=4000
     volumes:
        - ./mysql:/var/lib/mysql
     ports:
        - 23306:3306
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+
