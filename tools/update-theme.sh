@@ -3,7 +3,7 @@ set -euo pipefail
 
 REPO="https://github.com/discovery-survey/plugin-admin"
 LATEST_URL="${REPO}/releases/latest"
-ZIP_NAME="theme-admin.zip"
+ZIP_NAME="admin_theme_Sea_Green_Extended.zip"
 
 LIME_ROOT="/home/survey-user/limesurvey"
 DEST_DIR="${LIME_ROOT}/upload/themes/admin"
