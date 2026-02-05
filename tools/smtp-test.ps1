@@ -11,7 +11,7 @@ $To   = "valeinikolaev@gmail.com"
 
 # Username can be anything per your config:
 $User = "any"
-$Pass = "UpZ1pokFRRJRLTsLdlTYz2Sh"
+$Pass = ""
 
 function Read-Line($reader) {
     $line = $reader.ReadLine()
